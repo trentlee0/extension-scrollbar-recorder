@@ -15,16 +15,16 @@ function jumpToTarget(isClickJump, x, y) {
   }
 
   const curUrl = handleUrl(window.location.href)
-  get(Key.URLS).then((res) => {
-    res = res.urls || {}
-    const urlObj = res[curUrl]
+  get(Key.URLS).then(urls => {
+    urls = urls || {}
+    const urlObj = urls[curUrl]
     if (!urlObj) return
 
     if (isClickJump) {
       scrollTo(urlObj.x, urlObj.y)
     } else {
-      get(Key.ENABLE_JUMP).then(res => {
-        if (res.enableJump) {
+      get(Key.ENABLE_JUMP).then(enableJump => {
+        if (enableJump) {
           scrollTo(urlObj.x, urlObj.y)
 
           setTimeout(() => {
@@ -50,7 +50,9 @@ chrome.runtime.onConnect.addListener(res => {
 
 window.onload = () => jumpToTarget()
 
-window.onbeforeunload = () => sendMsgToBackground('save-scroll', getScrollData())
-
-// setTimeout(() => {
-// }, 60 * 1000)
+get(Key.AUTO_SAVE_DELAY).then(autoSaveDelay => {
+  autoSaveDelay = autoSaveDelay || 60
+  setTimeout(() => {
+    window.onbeforeunload = () => sendMsgToBackground('save-scroll', getScrollData())
+  }, autoSaveDelay * 1000)
+})

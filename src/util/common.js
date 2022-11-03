@@ -4,7 +4,7 @@
  */
 export function get(key) {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(key, res => resolve(res))
+    chrome.storage.sync.get(key, res => resolve(res[key]))
   })
 }
 
@@ -27,5 +27,6 @@ export function handleUrl(url) {
 export const Key = {
   URLS: 'urls',
   ENABLE_JUMP: 'enableJump',
-  ENABLE_AUTO_SAVE: 'enableAutoSave'
+  ENABLE_AUTO_SAVE: 'enableAutoSave',
+  AUTO_SAVE_DELAY: 'autoSaveDelay'
 }
